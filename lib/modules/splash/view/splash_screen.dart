@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shippio/shippio_app.dart';
+import '../../../shippio_app.dart';
 
 import '../../../config/router/router_keys.dart';
 import '../../../core/constant/app_colors.dart';

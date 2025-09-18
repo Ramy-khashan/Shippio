@@ -1,0 +1,49 @@
+import 'dart:ui';
+import 'package:flutter/material.dart';
+
+class GlassyIconBtn extends StatelessWidget {
+  const GlassyIconBtn({super.key, required this.icon, required this.onPress});
+  final IconData icon;
+  final VoidCallback onPress;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsetsDirectional.only(end: 10),
+
+      child: ClipOval(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withValues(alpha: 0.17),
+                  Colors.white.withValues(alpha: 0.01),
+                  Colors.white.withValues(alpha: 0.17),
+                ],
+              ),
+              border: Border.all(
+                width: .7,
+                color: Colors.white.withValues(alpha: 0.8),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withValues(alpha: .04),
+                  blurRadius: 12,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: IconButton(
+              onPressed: onPress,
+              icon: Icon(icon, color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

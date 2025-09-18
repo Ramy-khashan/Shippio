@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shippio/core/constant/app_colors.dart';
+import '../../core/constant/app_colors.dart';
 
-ThemeData lightTheme = ThemeData(
-  scaffoldBackgroundColor: AppColors.whiteColor,
-  brightness: Brightness.light,
+ThemeData darkTheme = ThemeData(
+  scaffoldBackgroundColor: AppColors.secondaryColor,
+  brightness: Brightness.dark,
   useMaterial3: true,
+  
 );

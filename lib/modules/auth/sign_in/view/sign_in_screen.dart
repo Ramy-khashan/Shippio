@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shippio/core/constant/app_colors.dart';
+import '../../../../core/constant/app_colors.dart';
 import '../../../../config/router/router_keys.dart';
 import '../../../../core/components/app_button.dart';
 import '../../../../core/components/app_text_field.dart';
@@ -17,7 +17,7 @@ class SignInScreen extends StatelessWidget {
         },
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -43,7 +43,6 @@ class SignInScreen extends StatelessWidget {
                       TextSpan(
                         text: "Shippio",
                         style: TextStyle(
-                          color: Colors.black,
                           fontSize: 40,
 
                           fontWeight: FontWeight.w900,
@@ -87,7 +86,7 @@ class SignInScreen extends StatelessWidget {
                   child: AppButton(
                     title: "Sign In",
                     onPressed: () {
-                      context.goNamed(RouterKeys.homeScreen);
+                      context.goNamed(RouterKeys.navigationBar);
                     },
                   ),
                 ),

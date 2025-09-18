@@ -1,4 +1,4 @@
-package com.example.shippio
+package com.Ramy.khashan.shippio
 
 import io.flutter.embedding.android.FlutterActivity
 

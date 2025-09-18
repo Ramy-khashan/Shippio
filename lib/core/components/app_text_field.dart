@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shippio/core/constant/app_colors.dart';
+import 'package:flutter/services.dart';
+import '../constant/app_colors.dart';
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -7,26 +8,60 @@ class AppTextField extends StatelessWidget {
     this.labelText,
     this.controller,
     this.validator,
+    this.lines  ,
+    this.keyboardType  ,
+    this.borderRaduis = 14,
+    this.isOuterField = false,
+    this.prefixWidget,
+    this.inputFormatters = const [],
   });
   final String? labelText;
+  final bool isOuterField;
+  final TextInputType? keyboardType;
   final TextEditingController? controller;
+  final double borderRaduis;
+  final int? lines;
+  final Widget? prefixWidget;
+  final List<TextInputFormatter> inputFormatters;
   final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top:15),
-      child: TextFormField(
-        controller: controller,
-        validator: validator,
-        decoration: InputDecoration(
-          labelText: labelText,
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: AppColors.primaryColor),
-            borderRadius: BorderRadius.circular(40),
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isOuterField)
+            if (labelText != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Text(
+                  labelText.toString(),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                ),
+              ),
+          TextFormField(
+            keyboardType: keyboardType,
+            maxLines: lines,
+            controller: controller,
+            validator: validator,
+            inputFormatters: inputFormatters,
+            decoration: InputDecoration(
+              prefixIcon: prefixWidget,
+
+              labelText: isOuterField ? null : labelText,
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.primaryColor),
+                borderRadius: BorderRadius.circular(borderRaduis),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 16.0,
+              ),
+            ),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
-        ),
+        ],
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shippio/config/theme/dark_theme.dart';
-import 'package:shippio/config/theme/light_theme.dart';
+import 'config/theme/dark_theme.dart';
+import 'config/theme/light_theme.dart';
 import 'config/router/router_config.dart';
 import 'core/constant/app_strings.dart';
 
@@ -13,7 +13,7 @@ class ShippioApp extends StatelessWidget {
       title: AppStrings.appTitle,
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       routerConfig: appRouter,
     );
   }
