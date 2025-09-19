@@ -6,6 +6,8 @@ import '../../modules/navigation/view/navigation_bar_screen.dart';
 import '../../modules/package/images/view/package_images_screen.dart';
 import '../../modules/package_history_details/controller/package_history_details_bloc.dart';
 import '../../modules/package_history_details/view/package_history_details.dart';
+import '../../modules/trip_process/controller/trip_process_bloc.dart';
+import '../../modules/trip_process/view/trip_process_screen.dart';
 import '../../modules/view_file/view/view_file.dart';
 import 'router_keys.dart';
 import '../../modules/home/controller/home_bloc.dart';
@@ -82,6 +84,13 @@ final GoRouter appRouter = GoRouter(
       (state) => BlocProvider(
         create: (context) => PackageImagesBloc(),
         child: const PackageImagesScreen(),
+      ),
+    ),
+    getRouteInstance(
+      RouterKeys.tripProcessScreen,
+      (state) => BlocProvider(
+        create: (context) => TripProcessBloc(),
+        child: const TripProcessScreen(),
       ),
     ),
     getRouteInstance(RouterKeys.viewFile, (state) {

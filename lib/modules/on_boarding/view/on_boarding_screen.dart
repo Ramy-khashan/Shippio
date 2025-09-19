@@ -39,7 +39,7 @@ class OnBoardingScreen extends StatelessWidget {
                   ),
                 ),
                 width: 80,
-                height: state.containerExpanded ? 130 : 0,
+                height: state.containerExpanded ? 150 : 0,
                 duration: const Duration(milliseconds: 1500),
                 curve: Curves.bounceInOut,
                 child: Align(
