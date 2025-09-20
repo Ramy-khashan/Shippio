@@ -1,33 +1,384 @@
 import 'dart:async';
-
- import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:shippio/core/constant/app_colors.dart';
+import 'package:shippio/core/constant/app_images.dart';
+import 'package:shippio/modules/trip_process_parts/pages/confirm_trip/confirm_trip_bottom_sheet_part.dart';
+import 'package:shippio/modules/trip_process_parts/pages/trip_pick_up/pick_up_bottom_sheet_part.dart';
+import '../../../core/constant/app_enums.dart';
+import '../../../core/utils/functions/camil_case.dart';
+import '../../trip_process_parts/pages/payment_dialog/payment_dialog.dart';
+import '../model/location_address_model.dart';
+import '../model/payment_type_model.dart';
+import '../model/vehicles_model.dart';
+import '../../trip_process_parts/pages/trip_distnation/distnation_bottom_sheet_part.dart';
+import '../../trip_process_parts/pages/schdule_selection/schedule_pick_time_bottom_sheet_part.dart';
+import '../../trip_process_parts/pages/vehicles_selection/select_vehicle_bottom_sheet_part.dart';
 part 'trip_process_event.dart';
 part 'trip_process_state.dart';
 
 class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
-  TripProcessBloc() : super(TripProcessInitial()) {
-    on<TripProcessEvent>((event, emit) {});
+  TripProcessBloc() : super(TripProcessState()) {
+    on<SetMarkerEvent>(_onAddMark);
+    on<OnSubmitEvent>(_onConfirmDetails);
+    on<AddressEvent>(_getAddress);
+    on<OnNavigationBackEvent>(_navigationBack);
+    on<OnChangeMarkerPlace>(_changeMarker);
+    on<OnSelectVehicleEvent>(_selectVehicle);
+    on<OnSelectPaymentEvent>(_selectPayment);
+    on<ShowSummaryEven>(_showSummary);
   }
-  static TripProcessBloc get(context) => BlocProvider.of(context);
+  static TripProcessBloc get(BuildContext context) => BlocProvider.of(context);
   final Completer<GoogleMapController> googleMapController =
       Completer<GoogleMapController>();
-
-  CameraPosition kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+  late LocationAddressModel pickUpAddressInfo;
+  late LocationAddressModel distnationAddressInfo;
+  CameraPosition cameraPosition = CameraPosition(
+    target: LatLng(30.0444, 31.2357),
+    zoom: 15,
   );
+  _onAddMark(SetMarkerEvent event, emit) async {
+    emit(state.copyWith(updateStatus: UpdateStatus.start));
+    Marker? marker;
+    if (event.markerType == TripProcessEnum.pickUpLocation) {
+      marker = Marker(
+        markerId: MarkerId('pickUp'),
+        position: event.markerPlace,
+      );
+      emit(state.copyWith(tripProcess: TripProcessEnum.pickUpDetails));
+    } else if (event.markerType == TripProcessEnum.distnationLocation) {
+      marker = Marker(
+        markerId: MarkerId('deliverTo'),
+        position: event.markerPlace,
+      );
 
-  CameraPosition kLake = CameraPosition(
-    bearing: 192.8334901395799,
-    target: LatLng(37.43296265331129, -122.08832357078792),
-    tilt: 59.440717697143555,
-    zoom: 19.151926040649414,
-  );
-  Future<void> goToTheLake() async {
-     final GoogleMapController controller = await googleMapController.future;
-    await controller.moveCamera(CameraUpdate.newCameraPosition(kLake));
+      emit(state.copyWith(tripProcess: TripProcessEnum.distnationDetails));
+    }
+    if (marker != null) {
+      Set<Marker> markersItems = {...state.markerSet};
+
+      markersItems.removeWhere((m) => m.markerId == marker!.markerId);
+
+      markersItems.add(marker);
+      await _changeCameraPosition(event.markerPlace);
+      emit(
+        state.copyWith(updateStatus: UpdateStatus.end, markerSet: markersItems),
+      );
+    }
+  }
+
+  Future _changeCameraPosition(LatLng latLng) async {
+    final controller = await googleMapController.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(CameraPosition(target: latLng, zoom: 15)),
+    );
+  }
+
+  Future<void> _getAddress(AddressEvent event, emit) async {
+    try {
+      emit(state.copyWith(getAddressStatus: RequestStatus.loading));
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        event.position.latitude,
+        event.position.longitude,
+      );
+
+      if (event.markerType == TripProcessEnum.pickUpDetails) {
+        pickUpAddressInfo = LocationAddressModel.fromJson(placemarks.first);
+
+        if (event.context.mounted) {
+          await _openBottomSheet(
+            event.context,
+            PickUpBottomSheetPart(),
+            onThen: (val) {
+              if (val != null && val == true) {
+                emit(
+                  state.copyWith(
+                    tripProcess: TripProcessEnum.distnationLocation,
+                  ),
+                );
+              }
+            },
+          );
+        }
+      } else if (event.markerType == TripProcessEnum.distnationDetails) {
+        distnationAddressInfo = LocationAddressModel.fromJson(placemarks.first);
+        if (event.context.mounted) {
+          await _openBottomSheet(
+            event.context,
+            DistnationBottomSheetPart(),
+            onThen: (val) {
+              if (val != null && val == true) {
+                emit(
+                  state.copyWith(
+                    tripProcess: TripProcessEnum.schedulePickupTime,
+                  ),
+                );
+              }
+            },
+          );
+        }
+      }
+      emit(state.copyWith(getAddressStatus: RequestStatus.success));
+    } catch (e) {
+      emit(state.copyWith(getAddressStatus: RequestStatus.failed));
+    }
+  }
+
+  Future _openBottomSheet(
+    BuildContext context,
+
+    Widget widget, {
+    Function(dynamic)? onThen,
+  }) async {
+    await showModalBottomSheet(
+      scrollControlDisabledMaxHeightRatio: 1,
+      enableDrag: false,
+      isDismissible: false,
+      backgroundColor: AppColors.tertiaryColor,
+
+      showDragHandle: false,
+      context: context,
+      builder: (_) => BlocProvider.value(
+        value: this,
+        child: PopScope(
+          canPop: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 80,
+                height: 7,
+                decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              widget,
+            ],
+          ),
+        ),
+      ),
+    ).then((val) {
+      if (onThen != null) onThen(val);
+    });
+  }
+
+  _onConfirmDetails(OnSubmitEvent event, emit) async {
+    switch (event.tripProcess) {
+      // case TripProcessEnum.init:
+      //   break;
+      case TripProcessEnum.pickUpLocation:
+        break;
+      case TripProcessEnum.pickUpDetails:
+        add(
+          AddressEvent(
+            context: event.context,
+            position: state.markerSet
+                .firstWhere((marker) => marker.markerId.value == "pickUp")
+                .position,
+            markerType: TripProcessEnum.pickUpDetails,
+          ),
+        );
+
+        break;
+
+      case TripProcessEnum.distnationLocation:
+        break;
+      case TripProcessEnum.distnationDetails:
+        add(
+          AddressEvent(
+            context: event.context,
+            position: state.markerSet
+                .firstWhere((marker) => marker.markerId.value == "deliverTo")
+                .position,
+            markerType: TripProcessEnum.distnationDetails,
+          ),
+        );
+
+        break;
+      case TripProcessEnum.schedulePickupTime:
+        await _openBottomSheet(
+          event.context,
+          SchedulePickTimeBottomSheetPart(),
+          onThen: (val) {
+            if (val != null && val == true) {
+              emit(
+                state.copyWith(tripProcess: TripProcessEnum.tripVehicleType),
+              );
+            }
+          },
+        );
+
+        break;
+      case TripProcessEnum.tripVehicleType:
+        await _openBottomSheet(
+          event.context,
+          SelectVehicleBottomSheetPart(),
+          onThen: (val) {
+            if (val != null && val == true) {
+              emit(
+                state.copyWith(tripProcess: TripProcessEnum.confirmationTrip),
+              );
+            }
+          },
+        );
+
+      case TripProcessEnum.confirmationTrip:
+        convertSummary();
+
+        await _openBottomSheet(event.context, ConfirmTripBottomSheetPart());
+      // emit(state.copyWith(tripProcess: TripProcessEnum.driverInfo));
+
+      // _openBottomSheet(event.context, SelectVehicleBottomSheetPart());
+    }
+  }
+
+  _navigationBack(OnNavigationBackEvent event, emit) async {
+    switch (state.tripProcess) {
+      // case TripProcessEnum.init:
+      //    if (event.context.mounted) { event.context.pop();}
+
+      case TripProcessEnum.pickUpLocation:
+        // emit(state.copyWith(tripProcess: TripProcessEnum.init));
+        if (event.context.mounted) {
+          event.context.pop();
+        }
+
+      case TripProcessEnum.pickUpDetails:
+        emit(state.copyWith(tripProcess: TripProcessEnum.pickUpLocation));
+
+        if (event.context.mounted) {
+          event.context.pop();
+        }
+
+      case TripProcessEnum.distnationLocation:
+        emit(state.copyWith(tripProcess: TripProcessEnum.pickUpDetails));
+
+        await _openBottomSheet(event.context, PickUpBottomSheetPart());
+
+      case TripProcessEnum.distnationDetails:
+        if (event.context.mounted) {
+          event.context.pop();
+        }
+
+        emit(state.copyWith(tripProcess: TripProcessEnum.distnationLocation));
+
+      case TripProcessEnum.schedulePickupTime:
+        if (event.context.mounted) {
+          event.context.pop();
+        }
+        emit(state.copyWith(tripProcess: TripProcessEnum.distnationDetails));
+
+        await _openBottomSheet(event.context, DistnationBottomSheetPart());
+
+      case TripProcessEnum.tripVehicleType:
+        if (event.context.mounted) {
+          event.context.pop();
+        }
+        emit(state.copyWith(tripProcess: TripProcessEnum.schedulePickupTime));
+
+        await _openBottomSheet(
+          event.context,
+          SchedulePickTimeBottomSheetPart(),
+        );
+
+      case TripProcessEnum.confirmationTrip:
+        if (event.context.mounted) {
+          event.context.pop();
+        }
+        emit(state.copyWith(tripProcess: TripProcessEnum.tripVehicleType));
+
+        await _openBottomSheet(event.context, SelectVehicleBottomSheetPart());
+    }
+  }
+
+  _changeMarker(event, emit) {
+    emit(state.copyWith(tripProcess: event.tripProcess));
+  }
+
+  List<VehiclesModel> vehiclesList = [
+    VehiclesModel(
+      id: 1,
+      title: "Bicycle Delivery",
+      fees: "16.00",
+      timeToDelivery: "60 min",
+      image: AppImages.bicycle,
+    ),
+    VehiclesModel(
+      id: 2,
+      title: "Motorbike Delivery",
+      fees: "20.00",
+      timeToDelivery: "45 min",
+      image: AppImages.motocycle,
+    ),
+    VehiclesModel(
+      id: 3,
+      title: "Car Delivery",
+      fees: "34.00",
+      timeToDelivery: "32 min",
+      image: AppImages.car,
+    ),
+    VehiclesModel(
+      id: 4,
+      title: "Car-van Delivery",
+      fees: "60.00",
+      timeToDelivery: "25 min",
+      image: AppImages.van,
+    ),
+  ];
+  _selectVehicle(OnSelectVehicleEvent event, emit) {
+    emit(state.copyWith(selectedVehicleId: event.vehicleId));
+  }
+
+  List<PaymentTypeModel> paymentsList = [
+    PaymentTypeModel(
+      title: "Paymob",
+      image: AppImages.paymob,
+      paymentType: PaymentTypeEnum.paymob,
+    ),
+    PaymentTypeModel(
+      title: "Fawry",
+      image: AppImages.fawry,
+      paymentType: PaymentTypeEnum.fawry,
+    ),
+    PaymentTypeModel(
+      title: "Stripe",
+      image: AppImages.stripe,
+      paymentType: PaymentTypeEnum.stripe,
+    ),
+  ];
+
+  _selectPayment(OnSelectPaymentEvent event, emit) {
+    emit(state.copyWith(selectedPayment: event.paymentType));
+  }
+
+  Map<String, dynamic> summaryMap = {
+    "delivery": 800,
+    "fees": 50,
+    "payment_services": 10,
+    "total_payment": 860,
+  };
+  List<Map<String, dynamic>> summarList = [];
+
+  convertSummary() {
+    summarList = [];
+    summaryMap.forEach(
+      (title, val) =>
+          summarList.add({"title": camilCaseMethod(title), "value": val}),
+    );
+  }
+
+  _showSummary(ShowSummaryEven even, emit) {
+    emit(state.copyWith(updateStatus: UpdateStatus.start));
+    convertSummary();
+    emit(state.copyWith(updateStatus: UpdateStatus.end));
+
+    _openBottomSheet(even.context, PaymentDialog());
   }
 }

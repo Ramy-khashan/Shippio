@@ -27,7 +27,7 @@ class PackageImagesBloc extends Bloc<PackageImagesEvent, PackageImagesState> {
   FileProcess fileProcess = FileProcessImpl();
   pickMultiImages(event, emit) async {
     if (isClosed) return;
-    emit(state.copyWith(getImages: RequestState.loading));
+    emit(state.copyWith(getImages: RequestStatus.loading));
     await fileProcess
         .allDocumentProcess()
         .then((image) {
@@ -38,17 +38,17 @@ class PackageImagesBloc extends Bloc<PackageImagesEvent, PackageImagesState> {
               emit(
                 state.copyWith(
                   imagesList: images,
-                  getImages: RequestState.success,
+                  getImages: RequestStatus.success,
                 ),
               );
             }
           } else {
-            emit(state.copyWith(getImages: RequestState.failed));
+            emit(state.copyWith(getImages: RequestStatus.failed));
           }
         })
         .onError((e, _) {
           if (!isClosed) {
-            emit(state.copyWith(getImages: RequestState.failed));
+            emit(state.copyWith(getImages: RequestStatus.failed));
           }
         });
   }

@@ -8,7 +8,7 @@ class AppButton extends StatelessWidget {
     required this.title,
     required this.onPressed,
     this.width,
-    this.horizontalPadding=0,
+    this.horizontalPadding = 0,
     this.height = 52,
     this.bgColor = Colors.white,
     this.textColor = AppColors.whiteColor,
@@ -19,7 +19,7 @@ class AppButton extends StatelessWidget {
   final Widget? icon;
   final String title;
   final VoidCallback onPressed;
-  final double  horizontalPadding;
+  final double horizontalPadding;
   final double? width;
   final double? height;
   final Color? bgColor;
@@ -34,12 +34,12 @@ class AppButton extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(14),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 100, sigmaY: 80),
+          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
           child: Container(
             height: height,
             width: width,
             decoration: BoxDecoration(
-              color: bgColor!.withValues(alpha: 0.15),
+              color: bgColor!.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: Colors.white.withValues(alpha: 0.35),

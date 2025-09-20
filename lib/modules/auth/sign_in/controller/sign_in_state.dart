@@ -1,19 +1,19 @@
 part of 'sign_in_bloc.dart';
 
 class SignInState extends Equatable {
-  final RequestState setLoginRequest;
+  final RequestStatus setLoginRequest;
 
   final String? errorMessage;
   final bool isPasswordVisible;
 
   const SignInState({
-    this.setLoginRequest = RequestState.init,
+    this.setLoginRequest = RequestStatus.init,
     this.errorMessage,
     this.isPasswordVisible = false,
   });
 
   SignInState copyWith({
-    RequestState? setLoginRequest,
+    RequestStatus? setLoginRequest,
     String? errorMessage,
     bool? isPasswordVisible,
   }) {

@@ -52,10 +52,13 @@ class HeaderInfo extends StatelessWidget {
                     ),
                   ),
                 ),
-               GlassyIconBtn(
-                icon:Icons.edit_note_outlined,
-                onPress:(){}
-               )
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: 8.0),
+                  child: GlassyIconBtn(
+                    icon: Icons.edit_note_outlined,
+                    onPress: () {},
+                  ),
+                ),
               ],
             ),
           ),

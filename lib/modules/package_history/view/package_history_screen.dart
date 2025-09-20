@@ -14,6 +14,7 @@ class PackageHistoryScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
           title: Text("Packages"),
+          
           centerTitle: true,
           bottom: TabBar(
             indicatorSize: TabBarIndicatorSize.tab,

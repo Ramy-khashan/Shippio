@@ -69,7 +69,7 @@ class UploadedImage extends StatelessWidget {
                       itemCount: state.imagesList.length,
                     ),
                   ),
-                  state.getImages == RequestState.loading
+                  state.getImages == RequestStatus.loading
                       ? LoadingItem()
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
