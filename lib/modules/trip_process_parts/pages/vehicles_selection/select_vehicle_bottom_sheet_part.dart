@@ -66,6 +66,7 @@ class SelectVehicleBottomSheetPart extends StatelessWidget {
                     children: [
                       AppButton(
                         title: "Back",
+                        textColor: AppColors.redColor,
                         width: 150,
                         onPressed: () {
                           controller.add(
@@ -74,11 +75,9 @@ class SelectVehicleBottomSheetPart extends StatelessWidget {
                         },
                       ),
                       SizedBox(width: 10),
-
                       AppButton(
                         title: "Next",
                         width: 150,
-
                         onPressed: () {
                           controller.add(
                             OnSubmitEvent(

@@ -18,4 +18,8 @@ class SettingTabTapsEvent extends SettingEvent {
   final BuildContext context;
 
   const SettingTabTapsEvent({required this.index, required this.context});
+}class ShowBottomSheetEvent extends SettingEvent {
+  final Widget child;
+  final BuildContext context;
+   const ShowBottomSheetEvent({required this.child, required this.context});
 }

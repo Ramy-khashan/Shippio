@@ -8,20 +8,24 @@ class AppTextField extends StatelessWidget {
     this.labelText,
     this.controller,
     this.validator,
-    this.lines  ,
-    this.keyboardType  ,
+    this.lines,
+    this.keyboardType,
+    this.suffixWidget,
     this.borderRaduis = 14,
     this.isOuterField = false,
+    this.isPassword = false,
     this.prefixWidget,
     this.inputFormatters = const [],
   });
   final String? labelText;
+  final bool isPassword;
   final bool isOuterField;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
   final double borderRaduis;
   final int? lines;
   final Widget? prefixWidget;
+  final Widget? suffixWidget;
   final List<TextInputFormatter> inputFormatters;
   final String? Function(String?)? validator;
 
@@ -42,19 +46,31 @@ class AppTextField extends StatelessWidget {
                 ),
               ),
           TextFormField(
+            obscureText: isPassword,
             keyboardType: keyboardType,
             maxLines: lines,
             controller: controller,
             validator: validator,
             inputFormatters: inputFormatters,
             decoration: InputDecoration(
+              suffixIcon: suffixWidget,
               prefixIcon: prefixWidget,
-
+              filled: true,
+              fillColor: AppColors.whiteColor.withValues(alpha: .1),
               labelText: isOuterField ? null : labelText,
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: AppColors.primaryColor),
                 borderRadius: BorderRadius.circular(borderRaduis),
               ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.whiteColor),
+                borderRadius: BorderRadius.circular(borderRaduis),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.whiteColor),
+                borderRadius: BorderRadius.circular(borderRaduis),
+              ),
+              labelStyle: TextStyle(color: AppColors.whiteColor),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 12.0,
                 vertical: 16.0,

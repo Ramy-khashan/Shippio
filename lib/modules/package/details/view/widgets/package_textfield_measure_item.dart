@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shippio/core/constant/app_colors.dart';
 
 import '../../../../../core/components/app_text_field.dart';
 import '../../../../../core/utils/functions/validate.dart';
@@ -19,7 +20,7 @@ class PackageTextfieldMeasureItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppTextField(
-      keyboardType:TextInputType.number,
+      keyboardType: TextInputType.number,
       isOuterField: true,
       inputFormatters: [Validate.numberOnlyFormater],
       borderRaduis: 9,
@@ -29,7 +30,9 @@ class PackageTextfieldMeasureItem extends StatelessWidget {
       prefixWidget: Padding(
         padding: const EdgeInsetsDirectional.only(start: 10),
         child: DropdownButton<String>(
+          dropdownColor: AppColors.tertiaryColor,
           underline: SizedBox(),
+          borderRadius: BorderRadius.circular(7),
 
           value: selectedMeasure,
           items: PackageDetailsBloc.get(context).measurement

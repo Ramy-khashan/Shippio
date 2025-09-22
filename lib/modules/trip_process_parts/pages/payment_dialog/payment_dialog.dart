@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shippio/core/components/app_button.dart';
 import 'package:shippio/core/constant/app_colors.dart';
 
@@ -67,7 +66,9 @@ class PaymentDialog extends StatelessWidget {
                         child: AppButton(
                           title: "Cancel",
                           onPressed: () {
-                            context.pop();
+                            controller.add(
+                              OnNavigationBackEvent(context: context),
+                            );
                           },
                           textColor: AppColors.redColor,
                         ),

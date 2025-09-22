@@ -1,11 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shippio/config/router/router_keys.dart';
 import 'package:shippio/core/components/glassy_icon_btn.dart';
-
 import '../../../../core/constant/app_colors.dart';
 
 class PackageHistoryShape extends StatelessWidget {
@@ -115,10 +113,9 @@ class PackageHistoryShape extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 PositionedDirectional(
                   bottom: 8,
-                  end: 0,
+                  end: 10,
                   child: GlassyIconBtn(
                     icon: Icons.arrow_forward,
                     onPress: () {

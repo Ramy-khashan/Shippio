@@ -12,6 +12,7 @@ enum TripProcessEnum {
   schedulePickupTime,
   tripVehicleType,
   confirmationTrip,
+  selectPayment,
 }
 
 enum PaymentTypeEnum { init, stripe, fawry, paymob }

@@ -66,10 +66,8 @@ class FileProcessImpl extends FileProcess {
       XFile? xFile = await ImagePicker().pickImage(
         source: isCamera ? ImageSource.camera : ImageSource.gallery,
       );
-
       if (xFile == null) {
         AppToast("No image picked");
-
         return null;
       }
       if (kReleaseMode) {
@@ -78,11 +76,9 @@ class FileProcessImpl extends FileProcess {
           return null;
         }
       }
-
       return File(xFile.path);
     } catch (e) {
       AppToast("No image picked");
-
       return null;
     }
   }
@@ -202,46 +198,50 @@ class FileProcessImpl extends FileProcess {
     FileProcessModel? file;
     await showDialog(
       context: ShippioApp.navigatorKey.currentContext!,
-      builder: (context) => AlertDialog(
-        title: Text("Picture"),
-        content: Text("Upload your images"),
-        actions: [
-          StatefulBuilder(
-            builder: (context, setState) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: isLoading
+      builder: (context) => GlassyPopUp(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              "Pick Images",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                "Upload your images",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            StatefulBuilder(
+              builder: (context, setState) {
+                return isLoading
                     ? const LoadingItem()
                     : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            child: AppButton(
-                              horizontalPadding: 15,
-                              height: 40,
-                              onPressed: () async {
-                                setState(() {
-                                  isLoading = true;
-                                });
-                                file = await allImageProcess(isCamera: true);
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                Navigator.pop(
-                                  ShippioApp.navigatorKey.currentContext!,
-                                );
-                              },
-                              title: "Camera",
-                              textColor: Colors.white,
-                            ),
+                          AppButton(
+                            width: 100,
+                            height: 40,
+                            title: "Camera",
+                            onPressed: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              file = await allImageProcess(isCamera: true);
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.pop(
+                                ShippioApp.navigatorKey.currentContext!,
+                              );
+                            },
                           ),
                           AppButton(
+                            width: 100,
                             height: 40,
-
-                            horizontalPadding: 15,
+                            title: "Gallery",
                             onPressed: () async {
                               setState(() {
                                 isLoading = true;
@@ -254,15 +254,13 @@ class FileProcessImpl extends FileProcess {
                                 ShippioApp.navigatorKey.currentContext!,
                               );
                             },
-                            title: "Gallery",
-                            textColor: Colors.white,
                           ),
                         ],
-                      ),
-              );
-            },
-          ),
-        ],
+                      );
+              },
+            ),
+          ],
+        ),
       ),
     );
     return file;

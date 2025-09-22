@@ -53,6 +53,7 @@ class SchedulePickTimeBottomSheetPart extends StatelessWidget {
                     children: [
                       AppButton(
                         title: "Back",
+                        textColor: AppColors.redColor,
                         width: 150,
                         onPressed: () {
                           controller.add(

@@ -52,7 +52,7 @@ class VehicleShape extends StatelessWidget {
                         "£${vehicle.fees}",
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
-                          color: AppColors.opacityPrimaryColor,
+                          color: AppColors.primaryColor,
                           fontSize: 17,
                         ),
                       ),

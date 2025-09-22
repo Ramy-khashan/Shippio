@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shippio/core/components/app_button.dart';
 import 'package:shippio/modules/trip_process_parts/widgets/payment_shape.dart';
 import '../../../../core/constant/app_colors.dart';
@@ -63,6 +64,7 @@ class ConfirmTripBottomSheetPart extends StatelessWidget {
                     children: [
                       AppButton(
                         title: "Back",
+                        textColor: AppColors.redColor,
                         width: 150,
                         onPressed: () {
                           controller.add(
@@ -76,6 +78,8 @@ class ConfirmTripBottomSheetPart extends StatelessWidget {
                         width: 150,
                         onPressed: () {
                           if (context.mounted) {
+                            context.pop(true);
+
                             controller.add(ShowSummaryEven(context: context));
                           }
                         },

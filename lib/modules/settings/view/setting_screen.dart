@@ -23,6 +23,7 @@ class SettingScreen extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: context.read<SettingBloc>().settingTab.length,
                     itemBuilder: (context, index) => ListTile(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       onTap: () {
                         context.read<SettingBloc>().add(
                           SettingTabTapsEvent(index: index, context: context),

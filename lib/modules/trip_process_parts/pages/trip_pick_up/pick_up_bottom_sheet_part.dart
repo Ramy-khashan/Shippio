@@ -1,4 +1,3 @@
- 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -13,8 +12,7 @@ class PickUpBottomSheetPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TripProcessBloc controller = TripProcessBloc.get(context);
-    return  BlocBuilder<TripProcessBloc, TripProcessState>(
-   
+    return BlocBuilder<TripProcessBloc, TripProcessState>(
       builder: (context, state) {
         return SafeArea(
           child: SingleChildScrollView(
@@ -58,7 +56,7 @@ class PickUpBottomSheetPart extends StatelessWidget {
                 ),
                 AppTextField(
                   controller: controller.pickUpAddressInfo.address,
-                  labelText: "Adress",
+                  labelText: "Address",
                   lines: 3,
                 ),
                 Padding(
@@ -68,6 +66,7 @@ class PickUpBottomSheetPart extends StatelessWidget {
                     children: [
                       AppButton(
                         title: "Back",
+                        textColor: AppColors.redColor,
                         width: 150,
                         onPressed: () {
                           controller.add(

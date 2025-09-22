@@ -9,6 +9,7 @@ import 'package:shippio/core/constant/app_colors.dart';
 import 'package:shippio/core/constant/app_images.dart';
 import 'package:shippio/modules/trip_process_parts/pages/confirm_trip/confirm_trip_bottom_sheet_part.dart';
 import 'package:shippio/modules/trip_process_parts/pages/trip_pick_up/pick_up_bottom_sheet_part.dart';
+import '../../../core/components/glassy_show_bottom_sheet.dart';
 import '../../../core/constant/app_enums.dart';
 import '../../../core/utils/functions/camil_case.dart';
 import '../../trip_process_parts/pages/payment_dialog/payment_dialog.dart';
@@ -139,28 +140,35 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
       scrollControlDisabledMaxHeightRatio: 1,
       enableDrag: false,
       isDismissible: false,
-      backgroundColor: AppColors.tertiaryColor,
-
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.only(
+          topLeft: Radius.circular(35),
+          topRight: Radius.circular(35),
+        ),
+      ),
       showDragHandle: false,
       context: context,
-      builder: (_) => BlocProvider.value(
-        value: this,
-        child: PopScope(
-          canPop: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 80,
-                height: 7,
-                decoration: BoxDecoration(
-                color: AppColors.whiteColor,
+      builder: (_) => GlassyShowBottomSheet(
+        child: BlocProvider.value(
+          value: this,
+          child: PopScope(
+            canPop: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 80,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
 
-                  borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              widget,
-            ],
+                widget,
+              ],
+            ),
           ),
         ),
       ),
@@ -231,10 +239,20 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
 
       case TripProcessEnum.confirmationTrip:
         convertSummary();
-
-        await _openBottomSheet(event.context, ConfirmTripBottomSheetPart());
+        await _openBottomSheet(
+          event.context,
+          ConfirmTripBottomSheetPart(),
+          onThen: (val) {
+            if (val != null && val == true) {
+              emit(state.copyWith(tripProcess: TripProcessEnum.selectPayment));
+            }
+          },
+        );
+      case TripProcessEnum.selectPayment:
+      // emit(state.copyWith(tripProcess: TripProcessEnum.selectPayment));
+      //Preform payment method
+      // await _openBottomSheet(event.context, ConfirmTripBottomSheetPart());
       // emit(state.copyWith(tripProcess: TripProcessEnum.driverInfo));
-
       // _openBottomSheet(event.context, SelectVehicleBottomSheetPart());
     }
   }
@@ -295,10 +313,18 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         emit(state.copyWith(tripProcess: TripProcessEnum.tripVehicleType));
 
         await _openBottomSheet(event.context, SelectVehicleBottomSheetPart());
+
+      case TripProcessEnum.selectPayment:
+        if (event.context.mounted) {
+          event.context.pop();
+        }
+        emit(state.copyWith(tripProcess: TripProcessEnum.confirmationTrip));
+
+        await _openBottomSheet(event.context, ConfirmTripBottomSheetPart());
     }
   }
 
-  _changeMarker(event, emit) {
+  _changeMarker(OnChangeMarkerPlace event, emit) {
     emit(state.copyWith(tripProcess: event.tripProcess));
   }
 

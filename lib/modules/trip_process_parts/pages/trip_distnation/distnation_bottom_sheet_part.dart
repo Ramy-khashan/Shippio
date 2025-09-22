@@ -1,4 +1,3 @@
- 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -59,7 +58,7 @@ class DistnationBottomSheetPart extends StatelessWidget {
                 ),
                 AppTextField(
                   controller: controller.distnationAddressInfo.address,
-                  labelText: "Adress",
+                  labelText: "Address",
                   lines: 3,
                 ),
                 Padding(
@@ -69,6 +68,7 @@ class DistnationBottomSheetPart extends StatelessWidget {
                     children: [
                       AppButton(
                         title: "Back",
+                        textColor: AppColors.redColor,
                         width: 150,
                         onPressed: () {
                           controller.add(
