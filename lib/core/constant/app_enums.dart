@@ -16,3 +16,5 @@ enum TripProcessEnum {
 }
 
 enum PaymentTypeEnum { init, stripe, fawry, paymob }
+
+enum Position { pickUp, destination, driver }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../modules/driver_track_info/controller/driver_track_info_bloc.dart';
+import '../../modules/driver_track_info/view/driver_track_info_screen.dart';
 import '../../modules/navigation/controller/navigation_bar_bloc.dart';
 import '../../modules/navigation/view/navigation_bar_screen.dart';
 import '../../modules/package/images/view/package_images_screen.dart';
@@ -93,6 +96,14 @@ final GoRouter appRouter = GoRouter(
         child: const TripProcessScreen(),
       ),
     ),
+    getRouteInstance(RouterKeys.driverTrackInfoScreen, (state) {
+      Set<Marker> markers = (state.extra as Map<String, dynamic>)['markers'];
+      return BlocProvider(
+        create: (context) =>
+            DriverTrackInfoBloc()..add(GetMarkerAndPosition(markers: markers)),
+        child: DriverTrackInfoScreen(),
+      );
+    }),
     getRouteInstance(RouterKeys.viewFile, (state) {
       String file = (state.extra as Map<String, dynamic>)['file'];
       String? fileName = (state.extra as Map<String, dynamic>)['name'];

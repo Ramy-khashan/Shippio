@@ -9,8 +9,10 @@ import 'package:shippio/core/constant/app_colors.dart';
 import 'package:shippio/core/constant/app_images.dart';
 import 'package:shippio/modules/trip_process_parts/pages/confirm_trip/confirm_trip_bottom_sheet_part.dart';
 import 'package:shippio/modules/trip_process_parts/pages/trip_pick_up/pick_up_bottom_sheet_part.dart';
+import '../../../config/router/router_keys.dart';
 import '../../../core/components/glassy_show_bottom_sheet.dart';
 import '../../../core/constant/app_enums.dart';
+import '../../../core/constant/app_strings.dart';
 import '../../../core/utils/functions/camil_case.dart';
 import '../../trip_process_parts/pages/payment_dialog/payment_dialog.dart';
 import '../model/location_address_model.dart';
@@ -47,14 +49,18 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     Marker? marker;
     if (event.markerType == TripProcessEnum.pickUpLocation) {
       marker = Marker(
-        markerId: MarkerId('pickUp'),
+        markerId: MarkerId(AppStrings.pickUp),
         position: event.markerPlace,
       );
       emit(state.copyWith(tripProcess: TripProcessEnum.pickUpDetails));
     } else if (event.markerType == TripProcessEnum.distnationLocation) {
       marker = Marker(
-        markerId: MarkerId('deliverTo'),
+        markerId: MarkerId(AppStrings.deliverTo),
         position: event.markerPlace,
+        icon: await BitmapDescriptor.asset(
+          ImageConfiguration(size: Size(48, 48)),
+          AppImages.destination,
+        ),
       );
 
       emit(state.copyWith(tripProcess: TripProcessEnum.distnationDetails));
@@ -249,6 +255,10 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
           },
         );
       case TripProcessEnum.selectPayment:
+        event.context.pushNamed(
+          RouterKeys.driverTrackInfoScreen,
+          extra: {'markers': state.markerSet},
+        );
       // emit(state.copyWith(tripProcess: TripProcessEnum.selectPayment));
       //Preform payment method
       // await _openBottomSheet(event.context, ConfirmTripBottomSheetPart());

@@ -19,5 +19,6 @@ class RouterKeys {
   static const String settingScreen = "/setting";
   static const String navigationBar = "/navigation_bar";
   static const String tripProcessScreen = "/trip_process";
+  static const String driverTrackInfoScreen = "/driver_track_info";
    static const String viewFile = "/view_file";
 }

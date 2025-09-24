@@ -7,6 +7,7 @@ class AppImages {
   static const String paymob = 'assets/images/paymob.png';
   static const String fawry = 'assets/images/fawry.jpg';
   static const String stripe = 'assets/images/stripe.png';
+  static const String destination = 'assets/images/destination.png';
   //shapes
   static const String introP1 = 'assets/images/shapes/intro_p1.png';
   static const String introP2 = 'assets/images/shapes/intro_p2.png';

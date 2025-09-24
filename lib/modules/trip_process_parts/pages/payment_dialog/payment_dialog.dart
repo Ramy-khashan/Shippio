@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shippio/core/components/app_button.dart';
 import 'package:shippio/core/constant/app_colors.dart';
 
+import '../../../../core/constant/app_enums.dart';
 import '../../../trip_process/controller/trip_process_bloc.dart';
 
 class PaymentDialog extends StatelessWidget {
@@ -75,7 +76,19 @@ class PaymentDialog extends StatelessWidget {
                       ),
                       SizedBox(width: 20),
                       Expanded(
-                        child: AppButton(title: "Confirm", onPressed: () {}),
+                        child: AppButton(
+                          title: "Confirm",
+                          onPressed: () {
+                            if (context.mounted) {
+                              controller.add(
+                                OnSubmitEvent(
+                                  context: context,
+                                  tripProcess: TripProcessEnum.selectPayment,
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),
