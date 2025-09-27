@@ -9,6 +9,7 @@ class DriverTrackInfoState extends Equatable {
     this.driverLocation,
     this.distance = "",
     this.duration = "",
+    this.getDriverStatus = RequestStatus.init,
   });
   final Set<Marker> markerSet;
   final LatLng? pickUpLocation;
@@ -17,6 +18,7 @@ class DriverTrackInfoState extends Equatable {
   final String distance;
   final String duration;
   final Set<Polyline> polylines;
+  final RequestStatus getDriverStatus;
 
   @override
   List<Object?> get props => [
@@ -27,6 +29,7 @@ class DriverTrackInfoState extends Equatable {
     polylines,
     distance,
     duration,
+    getDriverStatus,
   ];
   DriverTrackInfoState copyWith({
     Set<Marker>? markerSet,
@@ -36,6 +39,7 @@ class DriverTrackInfoState extends Equatable {
     LatLng? driverLocation,
     String? distance,
     String? duration,
+    RequestStatus? getDriverStatus,
   }) => DriverTrackInfoState(
     markerSet: markerSet ?? this.markerSet,
     polylines: polylines ?? this.polylines,
@@ -44,5 +48,6 @@ class DriverTrackInfoState extends Equatable {
     driverLocation: driverLocation ?? this.driverLocation,
     distance: distance ?? this.distance,
     duration: duration ?? this.duration,
-   );
+    getDriverStatus: getDriverStatus ?? this.getDriverStatus,
+  );
 }

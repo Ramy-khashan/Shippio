@@ -17,6 +17,17 @@ class OnDrawPolylineEven extends DriverTrackInfoEvent {}
 
 class OnShowMarkerPositioneEven extends DriverTrackInfoEvent {
   final Position position;
+    final BuildContext context;
 
-  const OnShowMarkerPositioneEven({required this.position});
+  const OnShowMarkerPositioneEven({required this.position,required this.context});
+}
+
+class ShowDriverEven extends DriverTrackInfoEvent {
+    final BuildContext context;
+
+  const ShowDriverEven({required this.context});
+}class OnAssignDriverEven extends DriverTrackInfoEvent {
+    final BuildContext context;
+
+  const OnAssignDriverEven({required this.context});
 }

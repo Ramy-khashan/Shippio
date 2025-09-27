@@ -8,7 +8,8 @@ class AppImages {
   static const String fawry = 'assets/images/fawry.jpg';
   static const String stripe = 'assets/images/stripe.png';
   static const String destination = 'assets/images/destination.png';
-  //shapes
+  static const String pickup = 'assets/images/pickup.png';
+   //shapes
   static const String introP1 = 'assets/images/shapes/intro_p1.png';
   static const String introP2 = 'assets/images/shapes/intro_p2.png';
   static const String arrowBack = 'assets/images/shapes/arrow_back.png';
@@ -21,4 +22,5 @@ class AppImages {
   static const String motocycle = 'assets/images/dumy/motocycle.png';
   static const String car = 'assets/images/dumy/car.png';
   static const String van = 'assets/images/dumy/van.png';
+  static const String driver = 'assets/images/dumy/driver.jpeg';
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shippio/core/constant/app_images.dart';
 
 import '../../../../core/components/glassy_icon_btn.dart';
-import '../../../../core/constant/app_colors.dart';
-
+ 
 class MarkerPosition extends StatelessWidget {
   const MarkerPosition({
     super.key,
@@ -23,28 +23,17 @@ class MarkerPosition extends StatelessWidget {
           padding: EdgeInsetsGeometry.all(20),
           child: Column(
             children: [
-              GlassyIconBtn(
-                icon: Icons.location_on,
-                iconColor: AppColors.redColor,
-
-                onPress: onPickUpPosition,
-              ),
+              GlassyIconBtn(image: AppImages.pickup, onPress: onPickUpPosition),
 
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: GlassyIconBtn(
-                  icon: Icons.golf_course,
-                  iconColor: AppColors.tertiaryColor,
+                  image: AppImages.destination,
 
                   onPress: onDestinationPosition,
                 ),
               ),
-              GlassyIconBtn(
-                icon: CupertinoIcons.car_detailed,
-
-                iconColor: AppColors.blackColor,
-                onPress: onDriverPosition,
-              ),
+              GlassyIconBtn(image: AppImages.car, onPress: onDriverPosition),
             ],
           ),
         ),

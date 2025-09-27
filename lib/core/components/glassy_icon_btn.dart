@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 class GlassyIconBtn extends StatelessWidget {
   const GlassyIconBtn({
     super.key,
-    required this.icon,
+      this.icon,
     required this.onPress,
     this.iconColor,
+    this.image,
+    this.imageSize,
   });
-  final IconData icon;
+  final IconData? icon;
   final Color? iconColor;
   final VoidCallback onPress;
+  final String? image;
+  final Size? imageSize;
   @override
   Widget build(BuildContext context) {
     return ClipOval(
@@ -45,7 +49,13 @@ class GlassyIconBtn extends StatelessWidget {
           ),
           child: IconButton(
             onPressed: onPress,
-            icon: Icon(icon, color: iconColor ?? Colors.white),
+            icon: image == null
+                ? Icon(icon, color: iconColor ?? Colors.white)
+                : Image.asset(
+                    image.toString(),
+                    width: imageSize?.height ?? 30,
+                    height: imageSize?.height ?? 30,
+                  ),
           ),
         ),
       ),

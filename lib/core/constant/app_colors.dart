@@ -9,6 +9,7 @@ class AppColors {
   static const Color tertiaryColor = Color.fromARGB(255, 10, 22, 37);
   static const Color opacityPrimaryColor = Color.fromARGB(188, 80, 156, 214);
   static const Color blackColor = Colors.black;
+  static const Color greenColor = Colors.green;
   static const List<Color> grediantColors = [
     Color.fromARGB(255, 65, 112, 147),
     Color.fromARGB(255, 49, 82, 110),

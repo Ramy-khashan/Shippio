@@ -26,6 +26,8 @@ class OnNavigationBackEvent extends TripProcessEvent {
   const OnNavigationBackEvent({required this.context});
 }
 
+class PrepareMarkersEven extends TripProcessEvent {}
+
 class OnChangeMarkerPlace extends TripProcessEvent {
   final TripProcessEnum tripProcess;
 

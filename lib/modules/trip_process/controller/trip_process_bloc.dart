@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:equatable/equatable.dart';
@@ -9,11 +10,14 @@ import 'package:shippio/core/constant/app_colors.dart';
 import 'package:shippio/core/constant/app_images.dart';
 import 'package:shippio/modules/trip_process_parts/pages/confirm_trip/confirm_trip_bottom_sheet_part.dart';
 import 'package:shippio/modules/trip_process_parts/pages/trip_pick_up/pick_up_bottom_sheet_part.dart';
+import 'package:shippio/shippio_app.dart';
 import '../../../config/router/router_keys.dart';
 import '../../../core/components/glassy_show_bottom_sheet.dart';
 import '../../../core/constant/app_enums.dart';
 import '../../../core/constant/app_strings.dart';
 import '../../../core/utils/functions/camil_case.dart';
+import '../../../core/utils/functions/get_placemark_isolate.dart';
+import '../../../core/utils/functions/marker_prepare.dart';
 import '../../trip_process_parts/pages/payment_dialog/payment_dialog.dart';
 import '../model/location_address_model.dart';
 import '../model/payment_type_model.dart';
@@ -26,6 +30,7 @@ part 'trip_process_state.dart';
 
 class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
   TripProcessBloc() : super(TripProcessState()) {
+    on<PrepareMarkersEven>(_prepareMarks);
     on<SetMarkerEvent>(_onAddMark);
     on<OnSubmitEvent>(_onConfirmDetails);
     on<AddressEvent>(_getAddress);
@@ -35,11 +40,18 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     on<OnSelectPaymentEvent>(_selectPayment);
     on<ShowSummaryEven>(_showSummary);
   }
+  _prepareMarks(even, emit) async {
+    if (ShippioApp.navigatorKey.currentContext != null) {
+      await MarkerIcons.preload(ShippioApp.navigatorKey.currentContext!);
+    }
+  }
+
   static TripProcessBloc get(BuildContext context) => BlocProvider.of(context);
   final Completer<GoogleMapController> googleMapController =
       Completer<GoogleMapController>();
   late LocationAddressModel pickUpAddressInfo;
   late LocationAddressModel distnationAddressInfo;
+
   CameraPosition cameraPosition = CameraPosition(
     target: LatLng(30.0444, 31.2357),
     zoom: 15,
@@ -51,16 +63,14 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
       marker = Marker(
         markerId: MarkerId(AppStrings.pickUp),
         position: event.markerPlace,
+        icon: MarkerIcons.pickUpIcon,
       );
       emit(state.copyWith(tripProcess: TripProcessEnum.pickUpDetails));
     } else if (event.markerType == TripProcessEnum.distnationLocation) {
       marker = Marker(
         markerId: MarkerId(AppStrings.deliverTo),
         position: event.markerPlace,
-        icon: await BitmapDescriptor.asset(
-          ImageConfiguration(size: Size(48, 48)),
-          AppImages.destination,
-        ),
+        icon: MarkerIcons.destinationIcon,
       );
 
       emit(state.copyWith(tripProcess: TripProcessEnum.distnationDetails));
@@ -93,9 +103,9 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         event.position.latitude,
         event.position.longitude,
       );
-
+      final addressInfo = await compute(parsePlacemark, placemarks.first);
       if (event.markerType == TripProcessEnum.pickUpDetails) {
-        pickUpAddressInfo = LocationAddressModel.fromJson(placemarks.first);
+        pickUpAddressInfo = addressInfo;
 
         if (event.context.mounted) {
           await _openBottomSheet(
@@ -113,7 +123,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
           );
         }
       } else if (event.markerType == TripProcessEnum.distnationDetails) {
-        distnationAddressInfo = LocationAddressModel.fromJson(placemarks.first);
+        distnationAddressInfo = addressInfo;
         if (event.context.mounted) {
           await _openBottomSheet(
             event.context,

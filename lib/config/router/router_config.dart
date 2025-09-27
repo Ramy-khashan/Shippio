@@ -92,15 +92,17 @@ final GoRouter appRouter = GoRouter(
     getRouteInstance(
       RouterKeys.tripProcessScreen,
       (state) => BlocProvider(
-        create: (context) => TripProcessBloc(),
+        create: (context) => TripProcessBloc()..add(PrepareMarkersEven()),
         child: const TripProcessScreen(),
       ),
     ),
     getRouteInstance(RouterKeys.driverTrackInfoScreen, (state) {
       Set<Marker> markers = (state.extra as Map<String, dynamic>)['markers'];
       return BlocProvider(
-        create: (context) =>
-            DriverTrackInfoBloc()..add(GetMarkerAndPosition(markers: markers)),
+        create: (context) => DriverTrackInfoBloc()
+          ..add(GetMarkerAndPosition(markers: markers))
+          ..add(ShowDriverEven(context: context))
+        ,
         child: DriverTrackInfoScreen(),
       );
     }),
