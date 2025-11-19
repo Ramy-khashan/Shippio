@@ -20,12 +20,10 @@ class DirectionsRepository {
       queryParameters: {
         'origin': '${origin.latitude},${origin.longitude}',
         'destination': '${destination.latitude},${destination.longitude}',
-        //TODO:Add APi Key
-        'key': "",
+         'key': "AIzaSyCQbSqqo4yk5QOAyZwhX3YnrXFv9rdGcbU",
       },
     );
-
-    // Check if response is successful
+ 
     if (response.statusCode == 200 &&
         List.from(response.data['routes']).isNotEmpty) {
       return Directions.fromMap(response.data);
