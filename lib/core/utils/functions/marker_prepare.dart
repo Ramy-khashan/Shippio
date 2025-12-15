@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shippio/core/constant/app_images.dart';
 
+import '../../models/google_map_model.dart';
+
 class MarkerIcons {
-  static late BitmapDescriptor pickUpIcon;
-  static late BitmapDescriptor destinationIcon;
-  static late BitmapDescriptor driver;
+  static late BitmapDescriptorModel pickUpIcon;
+  static late BitmapDescriptorModel destinationIcon;
+  static late BitmapDescriptorModel driver;
 
   static Future<void> preload(BuildContext context) async {
-    pickUpIcon = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(48, 48)),
-      AppImages.pickup,
+    final pickup = await BitmapDescriptorModel.updateImage(
+      icon: AppImages.pickup,
+      size: Size(48, 48),
     );
+    pickUpIcon = BitmapDescriptorModel(pickup);
 
-    destinationIcon = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(48, 48)),
-      AppImages.destination,
+    final destination = await BitmapDescriptorModel.updateImage(
+      icon: AppImages.destination,
+      size: Size(48, 48),
     );
-    driver = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(48, 48)),
-      AppImages.car,
+    destinationIcon = BitmapDescriptorModel(destination);
+
+    final car = await BitmapDescriptorModel.updateImage(
+      icon: AppImages.car,
+      size: Size(48, 48),
     );
+    driver = BitmapDescriptorModel(car);
   }
 }

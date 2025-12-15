@@ -11,7 +11,7 @@ class TripProcessState extends Equatable {
   });
   final UpdateStatus updateStatus;
   final RequestStatus getAddressStatus;
-  final Set<Marker> markerSet;
+  final Set<MarkerModel> markerSet;
   final TripProcessEnum tripProcess;
   final int selectedVehicleId;
   final PaymentTypeEnum selectedPayment;
@@ -30,7 +30,7 @@ class TripProcessState extends Equatable {
     RequestStatus? getAddressStatus,
     TripProcessEnum? tripProcess,
     PaymentTypeEnum? selectedPayment,
-    Set<Marker>? markerSet,
+    Set<MarkerModel>? markerSet,
     int? selectedVehicleId,
   }) => TripProcessState(
     updateStatus: updateStatus ?? this.updateStatus,

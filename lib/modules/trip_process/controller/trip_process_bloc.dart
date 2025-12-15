@@ -5,7 +5,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shippio/core/constant/app_colors.dart';
 import 'package:shippio/core/constant/app_images.dart';
 import 'package:shippio/modules/trip_process_parts/pages/confirm_trip/confirm_trip_bottom_sheet_part.dart';
@@ -15,9 +14,12 @@ import '../../../config/router/router_keys.dart';
 import '../../../core/components/glassy_show_bottom_sheet.dart';
 import '../../../core/constant/app_enums.dart';
 import '../../../core/constant/app_strings.dart';
+import '../../../core/models/google_map_model.dart';
+import '../../../core/repository/maps/map_service.dart';
 import '../../../core/utils/functions/camil_case.dart';
 import '../../../core/utils/functions/get_placemark_isolate.dart';
 import '../../../core/utils/functions/marker_prepare.dart';
+import '../../../core/utils/functions/service_locator.dart';
 import '../../trip_process_parts/pages/payment_dialog/payment_dialog.dart';
 import '../model/location_address_model.dart';
 import '../model/payment_type_model.dart';
@@ -47,28 +49,23 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
   }
 
   static TripProcessBloc get(BuildContext context) => BlocProvider.of(context);
-  final Completer<GoogleMapController> googleMapController =
-      Completer<GoogleMapController>();
+ 
   late LocationAddressModel pickUpAddressInfo;
   late LocationAddressModel distnationAddressInfo;
-
-  CameraPosition cameraPosition = CameraPosition(
-    target: LatLng(30.0444, 31.2357),
-    zoom: 15,
-  );
+ 
   _onAddMark(SetMarkerEvent event, emit) async {
     emit(state.copyWith(updateStatus: UpdateStatus.start));
-    Marker? marker;
+    MarkerModel? marker;
     if (event.markerType == TripProcessEnum.pickUpLocation) {
-      marker = Marker(
-        markerId: MarkerId(AppStrings.pickUp),
+      marker = MarkerModel(
+        markerId: AppStrings.pickUp,
         position: event.markerPlace,
         icon: MarkerIcons.pickUpIcon,
       );
       emit(state.copyWith(tripProcess: TripProcessEnum.pickUpDetails));
     } else if (event.markerType == TripProcessEnum.distnationLocation) {
-      marker = Marker(
-        markerId: MarkerId(AppStrings.deliverTo),
+      marker = MarkerModel(
+        markerId: AppStrings.deliverTo,
         position: event.markerPlace,
         icon: MarkerIcons.destinationIcon,
       );
@@ -76,7 +73,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
       emit(state.copyWith(tripProcess: TripProcessEnum.distnationDetails));
     }
     if (marker != null) {
-      Set<Marker> markersItems = {...state.markerSet};
+      Set<MarkerModel> markersItems = {...state.markerSet};
 
       markersItems.removeWhere((m) => m.markerId == marker!.markerId);
 
@@ -88,11 +85,9 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     }
   }
 
-  Future _changeCameraPosition(LatLng latLng) async {
-    final controller = await googleMapController.future;
-    controller.animateCamera(
-      CameraUpdate.newCameraPosition(CameraPosition(target: latLng, zoom: 15)),
-    );
+  Future _changeCameraPosition(PositionModel latLng) async {
+    sl.get<MapService>().moveTo(latLng);
+    
   }
 
   Future<void> _getAddress(AddressEvent event, emit) async {
@@ -100,8 +95,8 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
       emit(state.copyWith(getAddressStatus: RequestStatus.loading));
 
       List<Placemark> placemarks = await placemarkFromCoordinates(
-        event.position.latitude,
-        event.position.longitude,
+        event.position.position.latitude,
+        event.position.position.longitude,
       );
       final addressInfo = await compute(parsePlacemark, placemarks.first);
       if (event.markerType == TripProcessEnum.pickUpDetails) {
@@ -203,9 +198,11 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         add(
           AddressEvent(
             context: event.context,
-            position: state.markerSet
-                .firstWhere((marker) => marker.markerId.value == "pickUp")
-                .position,
+            position: PositionModel.fromJson(
+              state.markerSet
+                  .firstWhere((marker) => marker.markerId.value == "pickUp")
+                  .position,
+            ),
             markerType: TripProcessEnum.pickUpDetails,
           ),
         );
@@ -218,9 +215,11 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         add(
           AddressEvent(
             context: event.context,
-            position: state.markerSet
-                .firstWhere((marker) => marker.markerId.value == "deliverTo")
-                .position,
+            position: PositionModel.fromJson(
+              state.markerSet
+                  .firstWhere((marker) => marker.markerId.value == "deliverTo")
+                  .position,
+            ),
             markerType: TripProcessEnum.distnationDetails,
           ),
         );
@@ -252,9 +251,11 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
             }
           },
         );
+        break;
 
       case TripProcessEnum.confirmationTrip:
         convertSummary();
+
         await _openBottomSheet(
           event.context,
           ConfirmTripBottomSheetPart(),
@@ -264,11 +265,15 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
             }
           },
         );
+        break;
+
       case TripProcessEnum.selectPayment:
         event.context.pushNamed(
           RouterKeys.driverTrackInfoScreen,
           extra: {'markers': state.markerSet},
         );
+        break;
+
       // emit(state.copyWith(tripProcess: TripProcessEnum.selectPayment));
       //Preform payment method
       // await _openBottomSheet(event.context, ConfirmTripBottomSheetPart());
@@ -287,6 +292,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         if (event.context.mounted) {
           event.context.pop();
         }
+        break;
 
       case TripProcessEnum.pickUpDetails:
         emit(state.copyWith(tripProcess: TripProcessEnum.pickUpLocation));
@@ -294,11 +300,13 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         if (event.context.mounted) {
           event.context.pop();
         }
+        break;
 
       case TripProcessEnum.distnationLocation:
         emit(state.copyWith(tripProcess: TripProcessEnum.pickUpDetails));
 
         await _openBottomSheet(event.context, PickUpBottomSheetPart());
+        break;
 
       case TripProcessEnum.distnationDetails:
         if (event.context.mounted) {
@@ -306,6 +314,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         }
 
         emit(state.copyWith(tripProcess: TripProcessEnum.distnationLocation));
+        break;
 
       case TripProcessEnum.schedulePickupTime:
         if (event.context.mounted) {
@@ -314,6 +323,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         emit(state.copyWith(tripProcess: TripProcessEnum.distnationDetails));
 
         await _openBottomSheet(event.context, DistnationBottomSheetPart());
+        break;
 
       case TripProcessEnum.tripVehicleType:
         if (event.context.mounted) {
@@ -325,6 +335,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
           event.context,
           SchedulePickTimeBottomSheetPart(),
         );
+        break;
 
       case TripProcessEnum.confirmationTrip:
         if (event.context.mounted) {
@@ -333,6 +344,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         emit(state.copyWith(tripProcess: TripProcessEnum.tripVehicleType));
 
         await _openBottomSheet(event.context, SelectVehicleBottomSheetPart());
+        break;
 
       case TripProcessEnum.selectPayment:
         if (event.context.mounted) {
@@ -341,6 +353,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
         emit(state.copyWith(tripProcess: TripProcessEnum.confirmationTrip));
 
         await _openBottomSheet(event.context, ConfirmTripBottomSheetPart());
+        break;
     }
   }
 

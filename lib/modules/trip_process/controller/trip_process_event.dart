@@ -8,7 +8,7 @@ sealed class TripProcessEvent extends Equatable {
 }
 
 class SetMarkerEvent extends TripProcessEvent {
-  final LatLng markerPlace;
+  final PositionModel markerPlace;
   final TripProcessEnum markerType;
 
   const SetMarkerEvent({required this.markerPlace, required this.markerType});
@@ -37,7 +37,7 @@ class OnChangeMarkerPlace extends TripProcessEvent {
 class AddressEvent extends TripProcessEvent {
   final BuildContext context;
 
-  final LatLng position;
+  final PositionModel position;
   final TripProcessEnum markerType;
 
   const AddressEvent({

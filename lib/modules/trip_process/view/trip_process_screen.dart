@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shippio/core/components/app_button.dart';
 import 'package:shippio/core/components/loading_item.dart';
 import 'package:shippio/core/constant/app_colors.dart';
 import 'package:shippio/core/constant/app_enums.dart';
 
 import '../../../core/components/glassy_app_bar.dart';
+import '../../../core/models/google_map_model.dart';
+import '../../../core/repository/maps/map_service.dart';
+import '../../../core/utils/functions/service_locator.dart';
 import '../controller/trip_process_bloc.dart';
 
 class TripProcessScreen extends StatelessWidget {
@@ -29,25 +31,36 @@ class TripProcessScreen extends StatelessWidget {
           ),
           body: Stack(
             children: [
-              GoogleMap(
-                mapType: MapType.terrain,
-                initialCameraPosition: controller.cameraPosition,
-                onMapCreated: (GoogleMapController mapController) {
-                  if (!controller.googleMapController.isCompleted) {
-                    controller.googleMapController.complete(mapController);
-                  }
-                },
-                myLocationButtonEnabled: false,
-                markers: state.markerSet,
-                onTap: (LatLng latLng) {
-                  controller.add(
-                    SetMarkerEvent(
-                      markerPlace: latLng,
-                      markerType: state.tripProcess,
-                    ),
-                  );
-                },
+              RepaintBoundary(
+                child: sl.get<MapService>().buildMap(
+                  markers: state.markerSet,
+                  
+                  onTap: (PositionModel position) {
+                    controller.add(
+                      SetMarkerEvent(
+                        markerPlace: position,
+                        markerType: state.tripProcess,
+                      ),
+                    );
+                  },
+                ),
               ),
+
+              //   GoogleMap(
+              //     mapType: MapType.terrain,
+              //     initialCameraPosition: controller.cameraPosition,
+              //     onMapCreated: (GoogleMapController mapController) {
+              //       if (!controller.googleMapController.isCompleted) {
+              //         controller.googleMapController.complete(mapController);
+              //       }
+              //     },
+              //     myLocationButtonEnabled: false,
+
+              //     onTap: (LatLng latLng) {
+
+              //     },
+              //   ),
+              // ),
               if (state.tripProcess == TripProcessEnum.pickUpDetails ||
                   state.tripProcess == TripProcessEnum.distnationDetails)
                 Positioned(

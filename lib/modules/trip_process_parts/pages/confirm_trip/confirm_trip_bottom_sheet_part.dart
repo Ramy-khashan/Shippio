@@ -62,27 +62,29 @@ class ConfirmTripBottomSheetPart extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      AppButton(
-                        title: "Back",
-                        textColor: AppColors.redColor,
-                        width: 150,
-                        onPressed: () {
-                          controller.add(
-                            OnNavigationBackEvent(context: context),
-                          );
-                        },
+                      Expanded(
+                        child: AppButton(
+                          title: "Back",
+                          textColor: AppColors.redColor,
+                           onPressed: () {
+                            controller.add(
+                              OnNavigationBackEvent(context: context),
+                            );
+                          },
+                        ),
                       ),
                       SizedBox(width: 10),
-                      AppButton(
-                        title: "Confirm Trip",
-                        width: 150,
-                        onPressed: () {
-                          if (context.mounted) {
-                            context.pop(true);
-
-                            controller.add(ShowSummaryEven(context: context));
-                          }
-                        },
+                      Expanded(
+                        child: AppButton(
+                          title: "Confirm Trip",
+                           onPressed: () {
+                            if (context.mounted) {
+                              context.pop(true);
+                        
+                              controller.add(ShowSummaryEven(context: context));
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),

@@ -18,6 +18,7 @@ class DriverInfo extends StatelessWidget {
     return BlocBuilder<DriverTrackInfoBloc, DriverTrackInfoState>(
       builder: (context, state) {
         return GlassyShowBottomSheet(
+          colorOpacity: .6,
           padding: 0,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 50),

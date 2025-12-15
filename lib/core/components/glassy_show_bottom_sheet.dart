@@ -1,27 +1,37 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import '../constant/app_colors.dart';
 
 class GlassyShowBottomSheet extends StatelessWidget {
-  const GlassyShowBottomSheet({super.key, required this.child,   this.padding=20});
   final Widget child;
   final double padding;
+  final double colorOpacity;
+
+  const GlassyShowBottomSheet({
+    super.key,
+    required this.child,
+    this.padding = 20,
+    this.colorOpacity = .35,
+  });
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      borderRadius: BorderRadius.only(topLeft:Radius.circular(35),topRight:Radius.circular(35)),
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(35),
+        topRight: Radius.circular(35),
+      ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 8),
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Container(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          padding:   EdgeInsets.all(padding),
+          padding: EdgeInsets.all(padding),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.only(topLeft:Radius.circular(35),topRight:Radius.circular(35)),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.3),
-              width: 1.5,
+            color: AppColors.whiteColor.withValues(
+              alpha: colorOpacity,
+            ), // ← safer
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(35),
+              topRight: Radius.circular(35),
             ),
           ),
           child: child,

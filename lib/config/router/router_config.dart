@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+ import '../../core/models/google_map_model.dart';
 import '../../modules/driver_track_info/controller/driver_track_info_bloc.dart';
 import '../../modules/driver_track_info/view/driver_track_info_screen.dart';
 import '../../modules/navigation/controller/navigation_bar_bloc.dart';
@@ -97,7 +97,7 @@ final GoRouter appRouter = GoRouter(
       ),
     ),
     getRouteInstance(RouterKeys.driverTrackInfoScreen, (state) {
-      Set<Marker> markers = (state.extra as Map<String, dynamic>)['markers'];
+      Set<MarkerModel> markers = (state.extra as Map<String, dynamic>)['markers'];
       return BlocProvider(
         create: (context) => DriverTrackInfoBloc()
           ..add(GetMarkerAndPosition(markers: markers))

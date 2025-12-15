@@ -8,7 +8,7 @@ sealed class DriverTrackInfoEvent extends Equatable {
 }
 
 class GetMarkerAndPosition extends DriverTrackInfoEvent {
-  final Set<Marker> markers;
+  final Set<MarkerModel> markers;
 
   const GetMarkerAndPosition({required this.markers});
 }

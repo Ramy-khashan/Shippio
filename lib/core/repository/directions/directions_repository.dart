@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+ 
 import '../../models/directions_model.dart';
+import '../../models/google_map_model.dart';
 
 class DirectionsRepository {
   static const String _baseUrl =
@@ -12,16 +12,18 @@ class DirectionsRepository {
   DirectionsRepository({Dio? dio}) : _dio = dio ?? Dio();
 
   Future<Directions?> getDirections({
-    required LatLng origin,
-    required LatLng destination,
+    required PositionModel origin,
+    required PositionModel destination,
   }) async {
     final response = await _dio.get(
       _baseUrl,
       queryParameters: {
-        'origin': '${origin.latitude},${origin.longitude}',
-        'destination': '${destination.latitude},${destination.longitude}',
-         'key': "AIzaSyCQbSqqo4yk5QOAyZwhX3YnrXFv9rdGcbU",
-      },
+ 
+        'origin': '${origin.position.latitude},${origin.position.longitude}',
+        'destination': '${destination.position.latitude},${destination.position.longitude}',
+        //TODO:Add APi Key
+        'key': "AIzaSyBfVMBgd4bzqn4ARkRPUaWSYc1fBaa1CbU",
+       },
     );
  
     if (response.statusCode == 200 &&

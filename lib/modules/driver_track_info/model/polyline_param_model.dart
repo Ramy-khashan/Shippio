@@ -1,16 +1,16 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+ 
 import '../../../core/models/directions_model.dart';
+import '../../../core/models/google_map_model.dart';
 
 class PolylineParamModel {
-  LatLng? driver;
-  LatLng? destination;
+  PositionModel? driver;
+  PositionModel? destination;
 
   PolylineParamModel(this.driver, this.destination);
 }
 
 class PolylineModelInfo {
-  Polyline polyline;
+  PolylineModel polyline;
   Directions? polylineInfo;
     String ?totalDistance;
     String? totalDuration;

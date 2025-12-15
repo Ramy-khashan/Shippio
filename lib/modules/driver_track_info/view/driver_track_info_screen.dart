@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:go_router/go_router.dart'; 
 import 'package:shippio/modules/driver_track_info/controller/driver_track_info_bloc.dart';
 
 import '../../../core/components/glass_card.dart';
 import '../../../core/components/glassy_app_bar.dart';
 import '../../../core/constant/app_colors.dart';
 import '../../../core/constant/app_enums.dart';
+import '../../../core/models/google_map_model.dart';
+import '../../../core/repository/maps/map_service.dart';
+import '../../../core/utils/functions/service_locator.dart';
 import 'widgets/marker_position.dart';
 
 class DriverTrackInfoScreen extends StatelessWidget {
@@ -32,18 +34,26 @@ class DriverTrackInfoScreen extends StatelessWidget {
             ),
             body: Stack(
               children: [
-                GoogleMap(
-                  mapType: MapType.terrain,
-                  polylines: state.polylines,
-                  initialCameraPosition: controller.cameraPosition,
-                  onMapCreated: (GoogleMapController mapController) {
-                    if (!controller.googleMapController.isCompleted) {
-                      controller.googleMapController.complete(mapController);
-                    }
-                  },
-                  myLocationButtonEnabled: false,
-                  markers: state.markerSet,
+                  RepaintBoundary(
+                    
+                child: sl.get<MapService>().buildMap(
+                   markers: state.markerSet,
+                   polylines: state.polylines,
+                  onTap: (PositionModel position) {},
                 ),
+              ),
+                // GoogleMap(
+                //   mapType: MapType.terrain,
+                //   polylines: state.polylines,
+                //   initialCameraPosition: controller.cameraPosition,
+                //   onMapCreated: (GoogleMapController mapController) {
+                //     if (!controller.googleMapController.isCompleted) {
+                //       controller.googleMapController.complete(mapController);
+                //     }
+                //   },
+                //   myLocationButtonEnabled: false,
+                //   markers: state.markerSet,
+                // ),
                 MarkerPosition(
                   onPickUpPosition: () {
                     controller.add(

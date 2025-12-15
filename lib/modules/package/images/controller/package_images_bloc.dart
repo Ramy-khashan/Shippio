@@ -6,6 +6,7 @@ import '../../../../config/router/router_keys.dart';
 import '../../../../core/constant/app_enums.dart';
 import '../../../../core/models/file_process_model.dart';
 import '../../../../core/repository/file_process/file_process.dart';
+import '../../../../core/utils/functions/service_locator.dart';
 part 'package_images_event.dart';
 part 'package_images_state.dart';
 
@@ -24,11 +25,10 @@ class PackageImagesBloc extends Bloc<PackageImagesEvent, PackageImagesState> {
     });
   }
   static PackageImagesBloc get(context) => BlocProvider.of(context);
-  FileProcess fileProcess = FileProcessImpl();
-  pickMultiImages(event, emit) async {
+   pickMultiImages(event, emit) async {
     if (isClosed) return;
     emit(state.copyWith(getImages: RequestStatus.loading));
-    await fileProcess
+    await sl.get<FileProcess>()
         .allDocumentProcess()
         .then((image) {
           if (image != null) {
@@ -60,6 +60,6 @@ class PackageImagesBloc extends Bloc<PackageImagesEvent, PackageImagesState> {
   }
 
   onSubmit(OnSubmitEvent event, emit) {
-    event.context.pushNamed(RouterKeys.tripProcessScreen);
+     event.context.pushNamed(RouterKeys.tripProcessScreen);
   }
 }

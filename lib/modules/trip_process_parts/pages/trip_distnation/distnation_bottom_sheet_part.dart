@@ -66,31 +66,35 @@ class DistnationBottomSheetPart extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      AppButton(
-                        title: "Back",
-                        textColor: AppColors.redColor,
-                        width: 150,
-                        onPressed: () {
-                          controller.add(
-                            OnNavigationBackEvent(context: context),
-                          );
-                        },
+                      Expanded(
+                        child: AppButton(
+                          title: "Back",
+                          textColor: AppColors.redColor,
+                                          
+                          onPressed: () {
+                            controller.add(
+                              OnNavigationBackEvent(context: context),
+                            );
+                          },
+                        ),
                       ),
                       SizedBox(width: 10),
 
-                      AppButton(
-                        title: "Next",
-                        width: 150,
-
-                        onPressed: () {
-                          controller.add(
-                            OnSubmitEvent(
-                              context: context,
-                              tripProcess: TripProcessEnum.schedulePickupTime,
-                            ),
-                          );
-                          if (context.mounted) context.pop(true);
-                        },
+                      Expanded(
+                        child: AppButton(
+                          title: "Next",
+                                             
+                        
+                          onPressed: () {
+                            controller.add(
+                              OnSubmitEvent(
+                                context: context,
+                                tripProcess: TripProcessEnum.schedulePickupTime,
+                              ),
+                            );
+                            if (context.mounted) context.pop(true);
+                          },
+                        ),
                       ),
                     ],
                   ),

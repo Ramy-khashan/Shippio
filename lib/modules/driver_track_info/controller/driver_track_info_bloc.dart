@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shippio/core/constant/app_colors.dart';
 import 'package:shippio/core/models/directions_model.dart';
 import 'package:shippio/core/repository/directions/directions_repository.dart';
@@ -13,6 +12,9 @@ import 'package:shippio/core/utils/functions/marker_prepare.dart';
 import 'package:shippio/modules/driver_track_info/model/polyline_param_model.dart';
 import '../../../core/constant/app_enums.dart';
 import '../../../core/constant/app_strings.dart';
+import '../../../core/models/google_map_model.dart';
+import '../../../core/repository/maps/map_service.dart';
+import '../../../core/utils/functions/service_locator.dart';
 import '../view/widgets/driver_info.dart';
 
 part 'driver_track_info_event.dart';
@@ -30,23 +32,27 @@ class DriverTrackInfoBloc
   static DriverTrackInfoBloc get(BuildContext context) =>
       BlocProvider.of(context);
 
-  final Completer<GoogleMapController> googleMapController =
-      Completer<GoogleMapController>();
-  CameraPosition cameraPosition = CameraPosition(
-    target: LatLng(30.0444, 31.2357),
-    zoom: 14,
-  );
+  // final Completer<GoogleMapController> googleMapController =
+  //     Completer<GoogleMapController>();
+  // CameraPosition cameraPosition = CameraPosition(
+  //   target: LatLng(30.0444, 31.2357),
+  //   zoom: 14,
+  // );
   _setMarkerAndCamera(GetMarkerAndPosition even, emit) {
-    LatLng pickUpLocation = even.markers
-        .where((marker) => marker.markerId.value == AppStrings.pickUp)
-        .toList()
-        .first
-        .position;
-    LatLng destinationLocation = even.markers
-        .where((marker) => marker.markerId.value == AppStrings.deliverTo)
-        .toList()
-        .first
-        .position;
+    PositionModel pickUpLocation = PositionModel.fromJson(
+      even.markers
+          .where((marker) => marker.markerId.value == AppStrings.pickUp)
+          .toList()
+          .first
+          .position,
+    );
+    PositionModel destinationLocation = PositionModel.fromJson(
+      even.markers
+          .where((marker) => marker.markerId.value == AppStrings.deliverTo)
+          .toList()
+          .first
+          .position,
+    );
     emit(
       state.copyWith(
         markerSet: even.markers,
@@ -60,14 +66,16 @@ class DriverTrackInfoBloc
     add(OnDrawPolylineEven());
   }
 
-  Future _changeCameraPosition({required LatLng position}) async {
-    final controller = await googleMapController.future;
-    controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(target: position, zoom: 15),
-      ),
-      duration: Duration(milliseconds: 1000),
-    );
+  Future _changeCameraPosition({required PositionModel position}) async {
+    sl.get<MapService>().moveTo(position);
+
+    // final controller = await googleMapController.future;
+    // controller.animateCamera(
+    //   CameraUpdate.newCameraPosition(
+    //     CameraPosition(target: position, zoom: 15),
+    //   ),
+    //   duration: Duration(milliseconds: 1000),
+    // );
   }
 
   _drowPolyline(OnDrawPolylineEven even, emit) async {
@@ -76,14 +84,10 @@ class DriverTrackInfoBloc
       destination: state.destinationLocation!,
     );
     if (polylineInfo != null) {
-      Polyline polyline = Polyline(
-        startCap: Cap.roundCap,
-        polylineId: PolylineId(AppStrings.deliveryPath),
+      PolylineModel polyline = PolylineModel.fromPolyline(
+        path: AppStrings.deliveryPath,
         color: AppColors.redColor,
-        width: 6,
-        points: polylineInfo.polylinePoints
-            .map((val) => LatLng(val.latitude, val.longitude))
-            .toList(),
+        polylinePoints: polylineInfo.polylinePoints,
       );
       emit(
         state.copyWith(
@@ -124,7 +128,10 @@ class DriverTrackInfoBloc
       String title = await compute(getDriverInfoIsolate, null);
       AppToast(title);
       Map driverData = await setDriverMarker(
-        position: LatLng(30.052077506443368, 31.236343681812283),
+        position: PositionModel(
+          latitude: 30.052077506443368,
+          longitude: 31.236343681812283,
+        ),
       );
 
       emit(
@@ -134,7 +141,10 @@ class DriverTrackInfoBloc
           polylines: driverData['polyline'],
           distance: driverData['distance'],
           duration: driverData['duration'],
-          driverLocation: LatLng(30.052077506443368, 31.236343681812283),
+          driverLocation: PositionModel(
+            latitude: 30.052077506443368,
+            longitude: 31.236343681812283,
+          ),
         ),
       );
       if (even.context.mounted) {
@@ -171,11 +181,11 @@ class DriverTrackInfoBloc
   }
 
   Future<Map<String, dynamic>> setDriverMarker({
-    required LatLng position,
+    required PositionModel position,
   }) async {
-    Set<Marker> markers = {...state.markerSet};
-    Marker driver = Marker(
-      markerId: MarkerId(AppStrings.driver),
+    Set<MarkerModel> markers = {...state.markerSet};
+    MarkerModel driver = MarkerModel(
+      markerId: AppStrings.driver,
       position: position,
       icon: MarkerIcons.driver,
     );
@@ -206,16 +216,13 @@ Future<PolylineModelInfo?> drawPolyline(PolylineParamModel location) async {
     destination: location.destination!,
   );
 
-  Polyline? polyline;
+  PolylineModel? polyline;
   if (polylineInfo != null) {
-    polyline = Polyline(
-      startCap: Cap.roundCap,
-      polylineId: PolylineId(AppStrings.driverPath),
+    polyline = PolylineModel.fromPolyline(
+      path: AppStrings.driverPath,
       color: AppColors.tertiaryColor,
-      width: 6,
-      points: polylineInfo.polylinePoints
-          .map((val) => LatLng(val.latitude, val.longitude))
-          .toList(),
+
+      polylinePoints: polylineInfo.polylinePoints,
     );
   }
   return PolylineModelInfo(
