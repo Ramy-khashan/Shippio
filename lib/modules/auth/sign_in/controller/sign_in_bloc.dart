@@ -16,8 +16,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       }
     });
   }
-  handleSignIn(SignInButtonPressed event, emit) {}
-  togglePasswordVisibility(TogglePasswordVisibility event, emit) {
+  void handleSignIn(SignInButtonPressed event, emit) {}
+  void togglePasswordVisibility(TogglePasswordVisibility event, emit) {
     emit(state.copyWith(isPasswordVisible: event.isPasswordVisible));
   }
 }

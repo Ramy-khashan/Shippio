@@ -18,13 +18,13 @@ class PackageInformationBloc
       }
     });
   }
-  static PackageInformationBloc get(context) => BlocProvider.of(context);
+  static PackageInformationBloc get(BuildContext context) => BlocProvider.of(context);
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   PackageInfoModel packageInfoModel = PackageInfoModel(
     packageInfo: TextEditingController(),
     additionalNotes: TextEditingController(),
   );
-  onSubmitInfo(BuildContext context) {
+  void onSubmitInfo(BuildContext context) {
     // if (formKey.currentState!.validate()) {
     // debugPrint(packageInfoModel.toJson().toString());
     context.pushNamed(RouterKeys.packageImagesScreen);

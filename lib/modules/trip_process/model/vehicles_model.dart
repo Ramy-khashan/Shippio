@@ -20,7 +20,7 @@ class VehiclesModel {
       image: json['image'],
     );
   }
-  toJson() {
+  Map<String, Object?> toJson() {
     return {
       'id': id,
       'title': title,

@@ -17,7 +17,7 @@ class PackageDetailsModel {
     this.weightMeasuerment,
     required this.quantity,
   });
-  toJson() {
+  Map<String, Object?> toJson() {
     return {
       'package_height': double.parse(packageHeight.text),
       'height_measuerment': heightMeasuerment,

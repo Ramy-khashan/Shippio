@@ -3,7 +3,7 @@ import '../../../core/constant/app_colors.dart';
 import '../../../core/constant/app_images.dart';
 import 'package:go_router/go_router.dart';
 
-appBar(BuildContext context) => PreferredSize(
+PreferredSize appBar(BuildContext context) => PreferredSize(
   preferredSize: Size(
     double.infinity,
     Theme.of(context).appBarTheme.toolbarHeight ?? 50,

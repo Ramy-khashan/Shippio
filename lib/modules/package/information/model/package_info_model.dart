@@ -5,7 +5,7 @@ class PackageInfoModel {
   final TextEditingController additionalNotes;
 
   PackageInfoModel({required this.packageInfo, required this.additionalNotes});
-  toJson() {
+  Map<String, String?> toJson() {
     return {
       "package_info": packageInfo.text,
       "package_additional_notes": additionalNotes.text.isEmpty

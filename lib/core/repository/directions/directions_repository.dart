@@ -21,8 +21,7 @@ class DirectionsRepository {
  
         'origin': '${origin.position.latitude},${origin.position.longitude}',
         'destination': '${destination.position.latitude},${destination.position.longitude}',
-        //TODO:Add APi Key
-        'key': "AIzaSyBfVMBgd4bzqn4ARkRPUaWSYc1fBaa1CbU",
+         'key': "AIzaSyBfVMBgd4bzqn4ARkRPUaWSYc1fBaa1CbU",
        },
     );
  

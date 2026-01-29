@@ -49,7 +49,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       pagePath: "logout",
     ),
   ];
-  _navigationToggle(SettingTabTapsEvent even, emit) {
+  void _navigationToggle(SettingTabTapsEvent even, emit) {
     switch (settingTab[even.index].pagePath) {
       case "language":
         add(
@@ -91,7 +91,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     LanguageModel(language: "English", code: "en"),
     LanguageModel(language: "العربية", code: "ar"),
   ];
-  _openBottomSheet(ShowBottomSheetEvent even, emit) {
+  void _openBottomSheet(ShowBottomSheetEvent even, emit) {
     showModalBottomSheet(
       scrollControlDisabledMaxHeightRatio: 1,
       backgroundColor: AppColors.whiteColor.withValues(alpha: .05),

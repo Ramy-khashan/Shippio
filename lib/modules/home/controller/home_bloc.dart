@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constant/app_images.dart';
 
@@ -11,7 +12,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitial()) {
     on<HomeEvent>((event, emit) {});
   }
-  static HomeBloc get(context) => BlocProvider.of(context);
+  static HomeBloc get(BuildContext context) => BlocProvider.of(context);
   List<PackageModel> packagesTypeList = [
     PackageModel(
       id: 1,

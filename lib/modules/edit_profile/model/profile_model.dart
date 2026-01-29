@@ -27,7 +27,7 @@ class ProfileModel {
       profileImage: json['profile_image'],
     );
   }
-  toJson() {
+  Map<String, Object?> toJson() {
     return {
       "id": id,
       "first_name": firstName,

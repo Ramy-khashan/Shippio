@@ -1,4 +1,4 @@
-camilCaseMethod(String value) {
+String camilCaseMethod(String value) {
   String valueProccess = value.replaceAll("_", " ");
 
   valueProccess = valueProccess.toLowerCase();

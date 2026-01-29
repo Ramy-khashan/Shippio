@@ -17,15 +17,15 @@ class PackageImagesBloc extends Bloc<PackageImagesEvent, PackageImagesState> {
         await pickMultiImages(event, emit);
       }
       if (event is DeleteImageEvent) {
-        await deleteSelectedImage(event, emit);
+          deleteSelectedImage(event, emit);
       }
       if (event is OnSubmitEvent) {
-        await onSubmit(event, emit);
+          onSubmit(event, emit);
       }
     });
   }
-  static PackageImagesBloc get(context) => BlocProvider.of(context);
-   pickMultiImages(event, emit) async {
+  static PackageImagesBloc get(BuildContext context) => BlocProvider.of(context);
+   Future<void> pickMultiImages(PickImageEvent event, emit) async {
     if (isClosed) return;
     emit(state.copyWith(getImages: RequestStatus.loading));
     await sl.get<FileProcess>()
@@ -53,13 +53,13 @@ class PackageImagesBloc extends Bloc<PackageImagesEvent, PackageImagesState> {
         });
   }
 
-  deleteSelectedImage(DeleteImageEvent event, emit) {
+  void deleteSelectedImage(DeleteImageEvent event, emit) {
     List<FileProcessModel> images = [...state.imagesList];
     images.removeAt(event.selectedImageIndex);
     emit(state.copyWith(imagesList: images));
   }
 
-  onSubmit(OnSubmitEvent event, emit) {
+  void onSubmit(OnSubmitEvent event, emit) {
      event.context.pushNamed(RouterKeys.tripProcessScreen);
   }
 }

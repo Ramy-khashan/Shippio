@@ -38,7 +38,7 @@ class DriverTrackInfoBloc
   //   target: LatLng(30.0444, 31.2357),
   //   zoom: 14,
   // );
-  _setMarkerAndCamera(GetMarkerAndPosition even, emit) {
+  void _setMarkerAndCamera(GetMarkerAndPosition even, emit) {
     PositionModel pickUpLocation = PositionModel.fromJson(
       even.markers
           .where((marker) => marker.markerId.value == AppStrings.pickUp)
@@ -78,7 +78,7 @@ class DriverTrackInfoBloc
     // );
   }
 
-  _drowPolyline(OnDrawPolylineEven even, emit) async {
+  Future<void> _drowPolyline(OnDrawPolylineEven even, emit) async {
     Directions? polylineInfo = await DirectionsRepository().getDirections(
       origin: state.pickUpLocation!,
       destination: state.destinationLocation!,
@@ -99,7 +99,7 @@ class DriverTrackInfoBloc
     }
   }
 
-  _moveToPosition(OnShowMarkerPositioneEven even, emit) async {
+  Future<void> _moveToPosition(OnShowMarkerPositioneEven even, emit) async {
     switch (even.position) {
       case Position.pickUp:
         await _changeCameraPosition(position: state.pickUpLocation!);
@@ -122,7 +122,7 @@ class DriverTrackInfoBloc
     }
   }
 
-  _assignDriver(OnAssignDriverEven even, emit) async {
+  Future<void> _assignDriver(OnAssignDriverEven even, emit) async {
     try {
       emit(state.copyWith(getDriverStatus: RequestStatus.loading));
       String title = await compute(getDriverInfoIsolate, null);
@@ -161,7 +161,7 @@ class DriverTrackInfoBloc
   }
 
   bool isOpenDriverDialog = false;
-  _showDriverBottonSheet(ShowDriverEven even, emit) async {
+  Future<void> _showDriverBottonSheet(ShowDriverEven even, emit) async {
     isOpenDriverDialog = true;
 
     if (state.driverLocation == null) {

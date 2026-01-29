@@ -21,8 +21,8 @@ class NavigationBarBloc extends Bloc<NavigationBarEvent, NavigationBarState> {
       }
     });
   }
-  static NavigationBarBloc get(context) => BlocProvider.of(context);
-  onChangePage(ChangePageEvent event, emit) {
+  static NavigationBarBloc get(BuildContext context) => BlocProvider.of(context);
+  void onChangePage(ChangePageEvent event, emit) {
     emit(state.copyWith(selectedPage: event.selectedPageIndex));
   }
 

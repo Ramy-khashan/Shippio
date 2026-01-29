@@ -23,7 +23,7 @@ class PackageDetailsBloc
       }
     });
   }
-  static PackageDetailsBloc get(context) => BlocProvider.of(context);
+  static PackageDetailsBloc get(BuildContext context) => BlocProvider.of(context);
   List<String> measurement = ["Inches", "Cm", "Foot"];
   PackageDetailsModel packageDetails = PackageDetailsModel(
     packageHeight: TextEditingController(),
@@ -32,7 +32,7 @@ class PackageDetailsBloc
     quantity: TextEditingController(),
   );
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  onSubmit(BuildContext context) {
+  void onSubmit(BuildContext context) {
     // if (formKey.currentState!.validate()) {
       packageDetails.heightMeasuerment = state.heightMeasureType;
       packageDetails.weightMeasuerment = state.weightMeasureType;

@@ -42,7 +42,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     on<OnSelectPaymentEvent>(_selectPayment);
     on<ShowSummaryEven>(_showSummary);
   }
-  _prepareMarks(even, emit) async {
+  Future<void> _prepareMarks(PrepareMarkersEven even, emit) async {
     if (ShippioApp.navigatorKey.currentContext != null) {
       await MarkerIcons.preload(ShippioApp.navigatorKey.currentContext!);
     }
@@ -53,7 +53,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
   late LocationAddressModel pickUpAddressInfo;
   late LocationAddressModel distnationAddressInfo;
  
-  _onAddMark(SetMarkerEvent event, emit) async {
+  Future<void> _onAddMark(SetMarkerEvent event, emit) async {
     emit(state.copyWith(updateStatus: UpdateStatus.start));
     MarkerModel? marker;
     if (event.markerType == TripProcessEnum.pickUpLocation) {
@@ -188,7 +188,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     });
   }
 
-  _onConfirmDetails(OnSubmitEvent event, emit) async {
+  Future<void> _onConfirmDetails(OnSubmitEvent event, emit) async {
     switch (event.tripProcess) {
       // case TripProcessEnum.init:
       //   break;
@@ -282,7 +282,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     }
   }
 
-  _navigationBack(OnNavigationBackEvent event, emit) async {
+  Future<void> _navigationBack(OnNavigationBackEvent event, emit) async {
     switch (state.tripProcess) {
       // case TripProcessEnum.init:
       //    if (event.context.mounted) { event.context.pop();}
@@ -357,7 +357,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     }
   }
 
-  _changeMarker(OnChangeMarkerPlace event, emit) {
+  void _changeMarker(OnChangeMarkerPlace event, emit) {
     emit(state.copyWith(tripProcess: event.tripProcess));
   }
 
@@ -391,7 +391,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
       image: AppImages.van,
     ),
   ];
-  _selectVehicle(OnSelectVehicleEvent event, emit) {
+  void _selectVehicle(OnSelectVehicleEvent event, emit) {
     emit(state.copyWith(selectedVehicleId: event.vehicleId));
   }
 
@@ -413,7 +413,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     ),
   ];
 
-  _selectPayment(OnSelectPaymentEvent event, emit) {
+  void _selectPayment(OnSelectPaymentEvent event, emit) {
     emit(state.copyWith(selectedPayment: event.paymentType));
   }
 
@@ -425,7 +425,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
   };
   List<Map<String, dynamic>> summarList = [];
 
-  convertSummary() {
+  void convertSummary() {
     summarList = [];
     summaryMap.forEach(
       (title, val) =>
@@ -433,7 +433,7 @@ class TripProcessBloc extends Bloc<TripProcessEvent, TripProcessState> {
     );
   }
 
-  _showSummary(ShowSummaryEven even, emit) {
+  void _showSummary(ShowSummaryEven even, emit) {
     emit(state.copyWith(updateStatus: UpdateStatus.start));
     convertSummary();
     emit(state.copyWith(updateStatus: UpdateStatus.end));

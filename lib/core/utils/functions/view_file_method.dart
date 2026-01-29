@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../config/router/router_keys.dart';
 import '../../models/file_process_model.dart';
 
-viewFileMethod({
+void viewFileMethod({
   required BuildContext context,
   required FileProcessModel file,
 }) {

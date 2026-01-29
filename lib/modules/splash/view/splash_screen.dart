@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen>
     )..repeat();
   }
 
-  navigatorTimer() async {
+  Future<void> navigatorTimer() async {
     await Future.delayed(const Duration(seconds: 3), () {
       ShippioApp.navigatorKey.currentContext?.go(
         RouterKeys.onBoardingScreen,
