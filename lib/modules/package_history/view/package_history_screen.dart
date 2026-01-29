@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shippio/core/constant/app_colors.dart';
-import 'package:shippio/modules/package_history/view/widgets/package_history_shape.dart';
+import '../../../core/constant/app_colors.dart';
+import 'widgets/package_history_shape.dart';
 
 class PackageHistoryScreen extends StatelessWidget {
   const PackageHistoryScreen({super.key});

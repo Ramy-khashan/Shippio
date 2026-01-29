@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shippio/core/constant/app_colors.dart';
+import '../../../../../core/constant/app_colors.dart';
 
 import '../../../../../core/components/app_text_field.dart';
 import '../../../../../core/utils/functions/validate.dart';

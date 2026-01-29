@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shippio/core/components/app_button.dart';
-import 'package:shippio/core/components/glassy_icon_btn.dart';
-import 'package:shippio/core/components/glassy_show_bottom_sheet.dart';
-import 'package:shippio/core/constant/app_colors.dart';
-import 'package:shippio/core/constant/app_enums.dart';
-import 'package:shippio/core/constant/app_images.dart';
+import '../../../../core/components/app_button.dart';
+import '../../../../core/components/glassy_icon_btn.dart';
+import '../../../../core/components/glassy_show_bottom_sheet.dart';
+import '../../../../core/constant/app_colors.dart';
+import '../../../../core/constant/app_enums.dart';
+import '../../../../core/constant/app_images.dart';
 
 import '../../controller/driver_track_info_bloc.dart';
 import 'assign_driver_loading.dart';

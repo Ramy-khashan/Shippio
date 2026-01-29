@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shippio/core/constant/app_images.dart';
+import '../../constant/app_images.dart';
 
 import '../../models/google_map_model.dart';
 

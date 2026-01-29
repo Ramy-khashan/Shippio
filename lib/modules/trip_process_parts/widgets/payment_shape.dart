@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shippio/core/components/image_item.dart';
-import 'package:shippio/core/constant/app_colors.dart';
-import 'package:shippio/modules/trip_process/model/payment_type_model.dart';
+import '../../../core/components/image_item.dart';
+import '../../../core/constant/app_colors.dart';
+import '../../trip_process/model/payment_type_model.dart';
 
 import '../../../core/constant/app_enums.dart';
 

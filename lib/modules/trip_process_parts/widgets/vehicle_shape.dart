@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shippio/modules/trip_process/model/vehicles_model.dart';
+import '../../trip_process/model/vehicles_model.dart';
 
 import '../../../core/components/image_item.dart';
 import '../../../core/constant/app_colors.dart';

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
+import 'config/router/router_config.dart';
 import 'config/theme/dark_theme.dart';
 import 'config/theme/light_theme.dart';
-import 'config/router/router_config.dart';
 import 'core/constant/app_strings.dart';
 import 'core/utils/functions/responsive_handler.dart';
 

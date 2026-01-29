@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shippio/core/components/app_button.dart';
-import 'package:shippio/core/components/loading_item.dart';
-import 'package:shippio/core/constant/app_colors.dart';
-import 'package:shippio/core/constant/app_enums.dart';
+import '../../../core/components/app_button.dart';
+import '../../../core/components/loading_item.dart';
+import '../../../core/constant/app_colors.dart';
+import '../../../core/constant/app_enums.dart';
 
 import '../../../core/components/glassy_app_bar.dart';
 import '../../../core/models/google_map_model.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shippio/core/components/app_button.dart';
-import 'package:shippio/modules/trip_process_parts/widgets/payment_shape.dart';
+import '../../../../core/components/app_button.dart';
+import '../../widgets/payment_shape.dart';
 import '../../../../core/constant/app_colors.dart';
 import '../../../trip_process/controller/trip_process_bloc.dart';
 

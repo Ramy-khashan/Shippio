@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shippio/core/components/glassy_icon_btn.dart';
-import 'package:shippio/core/constant/app_colors.dart';
+import 'glassy_icon_btn.dart';
+import '../constant/app_colors.dart';
 
 class GlassyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shippio/core/constant/app_images.dart';
+import '../../../../core/constant/app_images.dart';
 
 import '../../../../core/components/glassy_icon_btn.dart';
  

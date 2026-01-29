@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart'; 
-import 'package:shippio/modules/driver_track_info/controller/driver_track_info_bloc.dart';
+import '../controller/driver_track_info_bloc.dart';
 
 import '../../../core/components/glass_card.dart';
 import '../../../core/components/glassy_app_bar.dart';
